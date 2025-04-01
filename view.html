@@ -4,39 +4,29 @@
     <meta charset="UTF-8">
     <title>Notu Görüntüle</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-        }
-        #noteContent {
-            background: #f0f0f0;
-            padding: 20px;
-            border-radius: 5px;
-        }
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 20px auto; padding: 20px; }
+        #noteContent { background: #f0f0f0; padding: 20px; border-radius: 5px; white-space: pre-wrap; }
     </style>
 </head>
 <body>
-    <div id="noteContent">Not yükleniyor...</div>
+    <div id="noteContent"></div>
 
     <script>
-        // URL'den ID'yi al
+        // URL'den şifrelenmiş notu al
         const urlParams = new URLSearchParams(window.location.search);
-        const noteId = urlParams.get('id');
-      
-        // Firestore'dan notu çek
-        db.collection("notes").doc(noteId).get()
-          .then((doc) => {
-            if (doc.exists) {
-              document.getElementById("noteContent").textContent = doc.data().text;
-            } else {
-              document.getElementById("noteContent").innerHTML = "Not bulunamadı 😞";
+        const encodedNote = urlParams.get('note');
+
+        // Şifreyi çöz ve göster
+        if (encodedNote) {
+            try {
+                const decodedNote = decodeURIComponent(escape(atob(encodedNote.replace(/-/g, '+').replace(/_/g, '/'))));
+                document.getElementById("noteContent").textContent = decodedNote;
+            } catch (error) {
+                document.getElementById("noteContent").textContent = "Hata: Geçersiz not!";
             }
-          })
-          .catch((error) => {
-            alert("Hata: " + error.message);
-          });
-      </script>
+        } else {
+            document.getElementById("noteContent").textContent = "Not bulunamadı!";
+        }
+    </script>
 </body>
 </html>
