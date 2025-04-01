@@ -24,16 +24,19 @@
         // URL'den ID'yi al
         const urlParams = new URLSearchParams(window.location.search);
         const noteId = urlParams.get('id');
-        
-        // localStorage'dan notu çek
-        const note = localStorage.getItem(noteId);
-        
-        // Göster
-        if (note) {
-            document.getElementById("noteContent").textContent = note;
-        } else {
-            document.getElementById("noteContent").innerHTML = "Not bulunamadı 😞";
-        }
-    </script>
+      
+        // Firestore'dan notu çek
+        db.collection("notes").doc(noteId).get()
+          .then((doc) => {
+            if (doc.exists) {
+              document.getElementById("noteContent").textContent = doc.data().text;
+            } else {
+              document.getElementById("noteContent").innerHTML = "Not bulunamadı 😞";
+            }
+          })
+          .catch((error) => {
+            alert("Hata: " + error.message);
+          });
+      </script>
 </body>
 </html>
