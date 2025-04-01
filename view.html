@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Notu Görüntüle</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        #noteContent {
+            background: #f0f0f0;
+            padding: 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="noteContent">Not yükleniyor...</div>
+
+    <script>
+        // URL'den ID'yi al
+        const urlParams = new URLSearchParams(window.location.search);
+        const noteId = urlParams.get('id');
+        
+        // localStorage'dan notu çek
+        const note = localStorage.getItem(noteId);
+        
+        // Göster
+        if (note) {
+            document.getElementById("noteContent").textContent = note;
+        } else {
+            document.getElementById("noteContent").innerHTML = "Not bulunamadı 😞";
+        }
+    </script>
+</body>
+</html>
