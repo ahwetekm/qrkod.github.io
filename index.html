@@ -2,10 +2,73 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Not Oluşturucu</title>
+    <!-- QR Kütüphanesi -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        #noteInput {
+            width: 100%;
+            height: 200px;
+            margin: 10px 0;
+            padding: 10px;
+        }
+        #qrContainer {
+            margin-top: 20px;
+            text-align: center;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-    
+    <h1>Not Oluştur 📝</h1>
+    <textarea id="noteInput" placeholder="Notunuzu yazın..."></textarea>
+    <button onclick="saveNote()">Notu Kaydet & QR Oluştur</button>
+    <div id="qrContainer"></div>
+
+    <script>
+        function saveNote() {
+            const note = document.getElementById("noteInput").value;
+            if (!note) return alert("Not boş olamaz!");
+
+            // Rastgele ID üret
+            const noteId = Math.random().toString(36).substr(2, 9);
+            
+            // Notu localStorage'a kaydet
+            localStorage.setItem(noteId, note);
+            
+            // QR Oluştur
+            const qrContainer = document.getElementById("qrContainer");
+            qrContainer.innerHTML = "";
+            const url = `${window.location.origin}/view.html?id=${noteId}`;
+            
+            new QRCode(qrContainer, {
+                text: url,
+                width: 200,
+                height: 200
+            });
+
+            // Kopyala butonu ekle
+            const copyBtn = document.createElement("button");
+            copyBtn.innerHTML = "Linki Kopyala";
+            copyBtn.style.marginLeft = "10px";
+            copyBtn.onclick = () => {
+                navigator.clipboard.writeText(url);
+                alert("Link panoya kopyalandı!");
+            };
+            qrContainer.appendChild(copyBtn);
+        }
+    </script>
 </body>
 </html>
