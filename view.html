@@ -20,14 +20,12 @@
 
         if (encodedData) {
             try {
-                // Şifreyi çöz
+                // Base64 decode + URI decode
                 const decodedData = decodeURIComponent(escape(atob(encodedData.replace(/-/g, '+').replace(/_/g, '/'))));
                 const data = JSON.parse(decodedData);
 
                 // Notu göster
-                if (data.note) {
-                    document.getElementById("noteContent").textContent = data.note;
-                }
+                document.getElementById("noteContent").textContent = data.note || "Not bulunamadı";
 
                 // Resmi göster (varsa)
                 if (data.image) {
@@ -35,6 +33,7 @@
                 }
             } catch (error) {
                 document.getElementById("noteContent").textContent = "Hata: Geçersiz veri!";
+                console.error("Decode Hatası:", error);
             }
         } else {
             document.getElementById("noteContent").textContent = "Veri bulunamadı!";
