@@ -14,20 +14,14 @@
     <div id="imageContent"></div>
 
     <script>
-        // URL'den veriyi al ve çöz
         const urlParams = new URLSearchParams(window.location.search);
         const encodedData = urlParams.get('data');
 
         if (encodedData) {
             try {
-                // Base64 decode + URI decode
                 const decodedData = decodeURIComponent(escape(atob(encodedData.replace(/-/g, '+').replace(/_/g, '/'))));
                 const data = JSON.parse(decodedData);
-
-                // Notu göster
                 document.getElementById("noteContent").textContent = data.note || "Not bulunamadı";
-
-                // Resmi göster (varsa)
                 if (data.image) {
                     document.getElementById("imageContent").innerHTML = `<img src="${data.image}">`;
                 }
