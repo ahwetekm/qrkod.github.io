@@ -2,30 +2,42 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Notu Görüntüle</title>
+    <title>Not ve Fotoğrafı Görüntüle</title>
     <style>
         body { font-family: Arial, sans-serif; max-width: 800px; margin: 20px auto; padding: 20px; }
-        #noteContent { background: #f0f0f0; padding: 20px; border-radius: 5px; white-space: pre-wrap; }
+        #noteContent { background: #f0f0f0; padding: 20px; border-radius: 5px; }
+        #imageContent img { max-width: 100%; margin-top: 20px; }
     </style>
 </head>
 <body>
     <div id="noteContent"></div>
+    <div id="imageContent"></div>
 
     <script>
-        // URL'den şifrelenmiş notu al
+        // URL'den veriyi al ve çöz
         const urlParams = new URLSearchParams(window.location.search);
-        const encodedNote = urlParams.get('note');
+        const encodedData = urlParams.get('data');
 
-        // Şifreyi çöz ve göster
-        if (encodedNote) {
+        if (encodedData) {
             try {
-                const decodedNote = decodeURIComponent(escape(atob(encodedNote.replace(/-/g, '+').replace(/_/g, '/'))));
-                document.getElementById("noteContent").textContent = decodedNote;
+                // Şifreyi çöz
+                const decodedData = decodeURIComponent(escape(atob(encodedData.replace(/-/g, '+').replace(/_/g, '/'))));
+                const data = JSON.parse(decodedData);
+
+                // Notu göster
+                if (data.note) {
+                    document.getElementById("noteContent").textContent = data.note;
+                }
+
+                // Resmi göster (varsa)
+                if (data.image) {
+                    document.getElementById("imageContent").innerHTML = `<img src="${data.image}">`;
+                }
             } catch (error) {
-                document.getElementById("noteContent").textContent = "Hata: Geçersiz not!";
+                document.getElementById("noteContent").textContent = "Hata: Geçersiz veri!";
             }
         } else {
-            document.getElementById("noteContent").textContent = "Not bulunamadı!";
+            document.getElementById("noteContent").textContent = "Veri bulunamadı!";
         }
     </script>
 </body>
